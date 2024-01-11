@@ -10,7 +10,7 @@ server.use('/api', apiRouter)
 
 mongoose
     .connect(
-        "mongodb+srv://loziospada:Spazzolino14@strive-blog.oeobgmc.mongodb.net/Birrabook"
+        process.env.MONGO_URL
     )
     .then(() => {
         server.listen(port, () =>{
