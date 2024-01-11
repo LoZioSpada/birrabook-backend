@@ -48,6 +48,25 @@ userRouter.post('/', async (req, res) => {
 })
 
 // MODIFICARE UN UTENTE
+userRouter.put('/:id', async (req, res) => {
+    try{
+        const { id } = req.params
+        const updateUser = await User.findByIdAndUpdate(id, req.body, {
+            new: true,
+        }).select("-password")
+
+        if(!updateUser){
+            return res.status(404).send()
+        } else {
+            res.json(updateUser)
+        }
+    } catch (error){
+        console.log(error)
+        req.status(400).send(error)
+    }
+})
+
+// ELIMINARE UN UTENTE
 userRouter.delete('/id', async (req, res) => {
     try {
         const { id } = req.params
