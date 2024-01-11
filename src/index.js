@@ -1,11 +1,13 @@
 import express from "express";
-import apiRouter from "./apiRouter.js"
+import apiRouter from "./routes/apiRouter.js"
 import mongoose from "mongoose";
 
 const server = express();
 
+// Porta del server
 const port = 3050
 
+// Sotto-directory /api
 server.use('/api', apiRouter)
 
 mongoose
