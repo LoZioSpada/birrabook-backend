@@ -5,7 +5,7 @@ import mongoose from "mongoose";
 const server = express();
 
 // Porta del server
-const port = 3050
+const port = 3030
 
 // Sotto-directory /api
 server.use('/api', apiRouter)
@@ -16,7 +16,7 @@ mongoose
     )
     .then(() => {
         server.listen(port, () =>{
-            console.log('🚀 Server listening on port ' + port);
+            console.log('🚀 Server listening on port ', port);
         })
     })
 

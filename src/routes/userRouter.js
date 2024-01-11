@@ -1,5 +1,6 @@
 import express from 'express'
 import { User } from '../models/users.js'
+import { checkAuth } from '../middlewares/checkAuth.js'
 
 const userRouter = express.Router()
 
@@ -7,6 +8,9 @@ const userRouter = express.Router()
 userRouter.get("/test", (req, res) => {
     res.json({ message: "test ok" })
 })
+
+
+userRouter.use(checkAuth)
 
 // RITORNARE TUTTI GLI UTENTI
 userRouter.get('/', async (req, res) => {
