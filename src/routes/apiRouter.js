@@ -10,4 +10,6 @@ apiRouter.get("/test", (req, res) =>{
 
 apiRouter.use('/users', userRouter)
 
+// apiRouter.use('/comments', commentsRouter)
+
 export default apiRouter

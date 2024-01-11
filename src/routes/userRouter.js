@@ -4,7 +4,7 @@ import { User } from '../models/users.js'
 const userRouter = express.Router()
 
 // messaggio per verificare che il server funzioni
-userRouter.get("/test", (req, res) =>{
+userRouter.get("/test", (req, res) => {
     res.json({ message: "test ok" })
 })
 
@@ -15,22 +15,48 @@ userRouter.get('/', async (req, res) => {
 })
 
 // RITORNARE UN UTENTE SPECIFICO
-userRouter.get('/:id', async (req, res) =>{
-    const { id } = req.params
-    const user = await User.findById(id)
+userRouter.get('/:id', async (req, res) => {
+    try {
+        const { id } = req.params
+        const user = await User.findById(id)
 
-    if(!user){
-        return res.status(404).send()
+        if (!user) {
+            return res.status(404).send()
+        }
+
+        res.json(user)
+    } catch (error) {
+        console.log(error)
     }
 
-    res.json(user)
 })
 
 // AGGIUNGERE UN UTENTE
-userRouter.post('/', async (req, res) =>{
-    const newUser = new User(req.body)
-    await newUser.save()
-    res.status(200).send(newUser)
+userRouter.post('/', async (req, res) => {
+    try {
+        const newUser = new User(req.body)
+        await newUser.save()
+        res.status(200).send(newUser)
+    } catch (error) {
+        console.log(error)
+        res.status(400).send(error)
+    }
 })
+
+// MODIFICARE UN UTENTE
+userRouter.delete('/id', async (req, res) => {
+    try {
+        const { id } = req.params
+        const user = await User.findByIdAndDelete(id)
+        if (!user) {
+            return res.status(404).send()
+        }
+    } catch (error) {
+        console.log(error)
+        req.status(400).send()
+    }
+})
+
+
 
 export default userRouter
