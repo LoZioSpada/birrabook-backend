@@ -7,7 +7,7 @@ import list from 'express-list-endpoints'
 const server = express();
 
 // Porta del server
-const port = 3030
+const port = 3050
 
 // Sotto-directory /api
 server.use('/api', apiRouter)
@@ -16,14 +16,20 @@ server.use('/api', apiRouter)
 server.use(genericError)
 
 mongoose
-    .connect(process.env.MONGO_URL)
+    .connect(
+        process.env.MONGO_URL,
+        {
+            userNewUrlParser: true,
+            useUnifiedTopology: true,
+        }
+    )
     .then(() => {
         server.listen(port, () => {
-            console.log('🚀 Server listening on port ', port);
+            console.log('🚀 Server listening on port ' + port);
             console.log(list(server))
         })
     })
 
-    .catch(() => {
-        console.log('Errore nella connessione al database!!')
-    })
+    // .catch(() => {
+    //     console.log('Errore nella connessione al database!!')
+    // })

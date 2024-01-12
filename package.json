@@ -2,11 +2,13 @@
   "name": "birrabook-backend",
   "version": "0.1.0",
   "description": "Capstone Project for EPICODE (backend)",
-  "main": "src/index.js",
+  "main": "index.js",
   "type": "module",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "nodemon src/index.js"
+    "dev": "nodemon -r dotenv/config src/index.js",
+    "build": "exit 0",
+    "start": "node src/index.js"
   },
   "author": "LoZioSpada",
   "license": "ISC",
