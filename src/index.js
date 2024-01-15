@@ -4,9 +4,9 @@ import mongoose from "mongoose";
 import { genericError } from "./middlewares/genericError.js";
 import list from 'express-list-endpoints'
 
+
 const server = express();
 
-// Porta del server
 const port = 3050
 
 // Sotto-directory /api
@@ -15,14 +15,12 @@ server.use('/api', apiRouter)
 // ERRORE GENERICO
 server.use(genericError)
 
+server.get("/health", (req, res) => {
+    res.status(200).json({ message: 'OK' })
+})
+
 mongoose
-    .connect(
-        process.env.MONGO_URL,
-        {
-            userNewUrlParser: true,
-            useUnifiedTopology: true,
-        }
-    )
+    .connect(process.env.MONGO_URL)
     .then(() => {
         server.listen(port, () => {
             console.log('🚀 Server listening on port ' + port);
@@ -30,6 +28,6 @@ mongoose
         })
     })
 
-    // .catch(() => {
-    //     console.log('Errore nella connessione al database!!')
-    // })
+    .catch(() => {
+        console.log('Errore nella connessione al database!!')
+    })
