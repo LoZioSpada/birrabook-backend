@@ -20,8 +20,6 @@ const BeerSchema = new Schema({
         type: String,
         required: true,
     },
-
-
 })
 
 export const Beer = new mongoose.model('beers', BeerSchema)

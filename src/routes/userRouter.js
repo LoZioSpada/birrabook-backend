@@ -1,6 +1,7 @@
 import express from 'express'
 import { User } from '../models/users.js'
-import { checkAuth } from '../middlewares/checkAuth.js'
+import checkJwt from '../middlewares/checkJwt.js'
+
 
 const userRouter = express.Router()
 
@@ -9,77 +10,87 @@ userRouter.get("/test", (req, res) => {
     res.json({ message: "test ok" })
 })
 
-
-userRouter.use(checkAuth)
-
-// RITORNARE TUTTI GLI UTENTI
-userRouter.get('/', async (req, res) => {
-    const users = await User.find({})
-    res.json(users)
-})
-
-// RITORNARE UN UTENTE SPECIFICO
-userRouter.get('/:id', async (req, res) => {
-    try {
-        const { id } = req.params
-        const user = await User.findById(id)
-
-        if (!user) {
-            return res.status(404).send()
+// Autenticazione: controllare la password per il login e fornire un token
+userRouter
+    .post('/session', async (req, res) =>{
+        const { email, password } = req.body
+        const user = await User.findOne({ email })
+        if(!user){
+            return res.status(404).send({ message: 'Utente non trovato' })
         }
-
-        res.json(user)
-    } catch (error) {
-        console.log(error)
-    }
-
-})
-
-// AGGIUNGERE UN UTENTE
-userRouter.post('/', async (req, res) => {
-    try {
-        const newUser = new User(req.body)
-        await newUser.save()
-        res.status(200).send(newUser)
-    } catch (error) {
-        console.log(error)
-        res.status(400).send(error)
-    }
-})
-
-// MODIFICARE UN UTENTE
-userRouter.put('/:id', async (req, res) => {
-    try{
-        const { id } = req.params
-        const updateUser = await User.findByIdAndUpdate(id, req.body, {
-            new: true,
-        }).select("-password")
-
-        if(!updateUser){
-            return res.status(404).send()
-        } else {
-            res.json(updateUser)
+        const isPasswordCorrect = bcrypt.compare(password, user.password)
+        if(!isPasswordCorrect){
+            return res.status(401).send({ message: 'Password errata!' })
         }
-    } catch (error){
-        console.log(error)
-        req.status(400).send(error)
-    }
-})
+        const payload = { id: user._id }
+        const token = jwt.sign(payload, process.env.JWT_SECRET, {
+            expiresIn: '1h',
+        })
+        res.status(200).json({ token: payload, message: 'Login effettuato con successo!' })
+    })
 
-// ELIMINARE UN UTENTE
-userRouter.delete('/id', async (req, res) => {
-    try {
-        const { id } = req.params
-        const user = await User.findByIdAndDelete(id)
-        if (!user) {
-            return res.status(404).send()
+    // get by id user e controllare che il token sia valido 
+    .get('/:id', checkJwt, async (req, res) => {
+        const user = await User.findById(req.params.id)
+        if(!user) {
+            res.status(404).json({ message: 'Utente non trovato!' })
+            return
         }
-    } catch (error) {
-        console.log(error)
-        req.status(400).send()
-    }
-})
+        // dopo l'autenticazione, l'utente è disponibile dentro req.user
+        // messo da noi nel middleware checkJwt
+        res.status(200).json(req.user)
+    })
 
+    // GET per ritornare tutti gli utenti
+    .get('/', async (req, res, next) => {
+        try{
+            const users = await User.find({}).select('-password')
+            if(!user){
+                return res.status(404).send()
+            }
+        } catch (error) {
+            console.log(error)
+            next(error)
+        }
+    })
 
+    // POST per aggiungere un utente e fare hashing della password
+    .post('/', async (req, res) => {
+        try{
+            const { email } = req.body
+            const user = await User.findOne({ email })
+            // controllare se l'utente esiste già
+            if(user){
+                return res.status(400).send({ message: 'Email già esistente nel sistema' })
+            }
+            // fare hashing della password inserita
+            const password = await bcrypt.hash(req.body.password, 15)
+            
+            // Crea utente sovrascrivendo il campo della password con quella criptata
+            const newUser = await User.create({
+                ...req.body,
+                password,
+            })
+
+            // Rimuovare il campo della password prima di inviare la risposta
+            const userSenzaPassword = {
+                _id: newUser._id,
+                name: newUser.name,
+                surname: newUser.surname,
+                email: newUser.email,
+            }
+
+            await newUser.save()
+            if(newUser){
+                res.status(200).send(userSenzaPassword)
+            } else {
+                next(error)
+            }
+
+        } catch (error) {
+            console.log(error)
+            res.status(500).send(error)
+        }
+    })
 
 export default userRouter
