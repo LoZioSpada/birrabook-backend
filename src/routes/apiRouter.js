@@ -1,5 +1,6 @@
 import express from "express";
 import userRouter from "./userRouter.js";
+import commentRouter from "./commentsRouter.js";
 
 const apiRouter = express.Router();
 
@@ -12,7 +13,7 @@ apiRouter.get("/test", (req, res) =>{
 
 apiRouter.use('/users', userRouter)
 
-// apiRouter.use('/comments', commentsRouter)
+apiRouter.use('/comments', commentRouter)
 
 // apiRouter.use('/beers', beersRouter)
 
