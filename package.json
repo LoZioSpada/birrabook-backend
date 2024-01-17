@@ -13,6 +13,7 @@
   "author": "LoZioSpada",
   "license": "ISC",
   "dependencies": {
+    "@getbrevo/brevo": "^2.0.0-beta.4",
     "express": "^4.18.2",
     "express-list-endpoints": "^6.0.0",
     "jsonwebtoken": "^9.0.2",
