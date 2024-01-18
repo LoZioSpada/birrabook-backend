@@ -20,6 +20,11 @@ const BeerSchema = new Schema({
         type: String,
         required: true,
     },
+
+    photo: {
+        type: Buffer,
+        required: true,
+    }
 })
 
 export const Beer = new mongoose.model('beers', BeerSchema)
