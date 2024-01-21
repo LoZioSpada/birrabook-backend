@@ -1,5 +1,5 @@
 import express from 'express';
-import { Beer } from '../models/beers';
+import { Beer } from '../models/beers.js';
 
 const beersRouter = express.Router()
 
@@ -39,6 +39,101 @@ beersRouter
     })
 
     // -- ROTTE PER I COMMENTI --
-    
+
+    // GET PER RITORNARE TUTTI I COMMENTI SU UNA BIRRA SPECIFICA
+    .get('/:id/comments', async (req, res) => {
+        try {
+            const comments = await Beer.findById(req.params.id)
+            .populate('comments user')
+            .select('comments -_id')
+
+            if(!comments){
+                return res.status(404).send()
+            }
+            res.json(comments)
+
+        } catch (error) {
+            console.log(error)
+            res.status(400).send(error)
+        }
+    })
+
+    // GET PER RITORNARE UN COMMENTO SPECIFICO SU UNA BIRRA SPECIFICA
+    .get('/:id/comments/:commentId', async (req, res) => {
+        try {
+            const beer = await Beer.findById(req.params.id);
+            const comment = await Comment.findById(req.params.commentId)
+            if(!beer){
+                return res.status(404).send()
+            } else if (!comment){
+                return res.status(404).send()
+            }
+            res.json(comment)
+
+        } catch (error) {
+            console.log(error)
+            res.status(400).send(error)
+        }
+    })
+
+    // POST PER AGGIUNGERE UN NUOVO COMMENTO AD UNA BIRRA
+    .post('/:id', async (req, res) => {
+        try{
+            const beer = await Beer.findById(req.params.id)
+            if(!beer){
+                return res.status(404).send()
+            }
+            const newComment = new Comment(req.body)
+            beer.comments.push(newComment)
+            await beer.save()
+            await newComment.save()
+            res.status(201).send(newComment)
+
+        } catch(error){
+            console.log(error)
+            res.status(400).send(error)
+        }
+    })
+
+    // PUT PER MODIFICARE UN COMMENTO
+    .put('/:id/comments/commentId', async (req, res) => {
+        try{
+            const beer = await Beer.findById(req.params.id)
+            const updateComment = await Comment.findByIdAndUpdate(
+                req.params.id,
+                req.body
+            )
+            if(!beer){
+                return res.status(404).send()
+            } else if (!updateComment){
+                return res.status(404).send()
+            }
+            res.json(updateComment)
+
+        } catch (error){
+            console.log(error)
+            return res.status(400).send(error)
+        }
+    })
+
+    // DELETE PER CANCELLARE UN COMMENTO
+    .delete('/:id/comments/commentId', async (req, res) => {
+        try{
+            const beer = await Beer.findById(req.params.id)
+            const deleteComment = await Comment.findByIdAndUpdate(
+                req.params.commentId
+            )
+            if(!beer){
+                return res.status(404).send()
+            } else if(!deleteComment){
+                return res.status(404).send()
+            } else {
+                res.status(204).send()
+            }
+        } catch (error){
+            console.log(error)
+            res.status(400).send(error)
+        }
+    })
 
 export default beersRouter
