@@ -1,6 +1,7 @@
 import express from 'express'
 import { User } from '../models/users.js'
 import checkJwt from '../middlewares/checkJwt.js'
+import bcrypt from 'bcrypt'
 
 
 const userRouter = express.Router()
