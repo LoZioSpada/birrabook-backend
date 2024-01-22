@@ -44,7 +44,7 @@ userRouter
     // GET per ritornare tutti gli utenti
     .get('/', async (req, res, next) => {
         try{
-            const users = await User.find({}).select('-password')
+            const user = await User.find({}).select('-password')
             if(!user){
                 return res.status(404).send()
             }
