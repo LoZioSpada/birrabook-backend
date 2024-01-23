@@ -2,6 +2,7 @@ import express from "express";
 import apiRouter from "./routes/apiRouter.js"
 import mongoose from "mongoose";
 import { genericError } from "./middlewares/genericError.js";
+import list from 'express-list-endpoints'
 
 
 const server = express();
@@ -23,6 +24,7 @@ mongoose
     .then(() => {
         server.listen(port, () => {
             console.log('🚀 Server listening on port ' + port);
+            console.table(list(server))
         })
     })
 
