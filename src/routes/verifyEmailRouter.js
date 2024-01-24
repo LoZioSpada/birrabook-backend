@@ -12,19 +12,25 @@ apiKey.apiKey = process.env.BREVO_API_KEY
 
 verifyEmailRouter
     .post('/', async (req, res) => {
-        let sendSmtpEmail = new brevo.SendSmtpEmail()
-        sendSmtpEmail.subject = 'Verifica la tua email {{params.subject}}'
 
         // Token da inviare nell'email
         const { _id } = req.body
+        const user = await getUserById(_id)
+        if(!user){
+            return res.status(404).send('Utente non trovato')
+        }
+
         const token = createToken(_id)
+
+        let sendSmtpEmail = new brevo.SendSmtpEmail()
+        sendSmtpEmail.subject = 'Conferma registrazione'
 
         sendSmtpEmail.htmlContent = HTMLVerifyEmail(token, _id)
         sendSmtpEmail.sender = {
             name: process.env.BRAND_NAME,
             email: process.env.MY_EMAIL,
         }
-        sendSmtpEmail.to = [{ email: process.env.SENDER_TO, name: 'LoZioSpada' }]
+        sendSmtpEmail.to = [{ email: user.email, name: user.name }]
         sendSmtpEmail.replyTo = {
             name: process.env.MY_MANE,
             email: process.env.MY_EMAIL,
@@ -34,10 +40,6 @@ verifyEmailRouter
             'Some-Custom-Name': 'unique-id-1234'
         }
 
-        sendSmtpEmail.params = {
-            parameter: 'email',
-            subject: 'Registrazione confermata'
-        }
 
         const data = await apiInstance.sendTransacEmail(sendSmtpEmail)
 
