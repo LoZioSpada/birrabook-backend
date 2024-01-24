@@ -25,7 +25,7 @@ googleRouter
                 })
                 res.redirect(
                     // qui andrà il link una volta fatto il deploy e il frontend
-                    `.../?token=${token}&userId=${req.user._id}`
+                    `https://birrabook.netlify.app/?token=${token}&userId=${req.user._id}`
                 )
                 
             } catch (error) {

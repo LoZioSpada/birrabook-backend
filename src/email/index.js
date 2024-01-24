@@ -28,7 +28,7 @@ const HTMLVerifyEmail = (token, id) => /*html*/ `<!DOCTYPE html>
                     <button class="px-2 py-2 text-blue-200 bg-blue-600 rounded">Click to Verify Email</button>
                     <p class="mt-4 text-sm">Se hai problemi a cliccare su "Verifica il tuo indirizzo email, 
                     copia e incolla l'URL qui sotto all'interno del tuo browser
-                        <a href="" class="text-blue-600 underline">  CLICCA QUI</a>
+                        <a href="https://birrabook.netlify.app/?token=${token}&userId=${id}" class="text-blue-600 underline">  CLICCA QUI</a>
                         <!-- INSERIRE QUI IL LINK DOPO IL DEPLOY DENTRO <a href=""></a> -->
                     </p>
                 </div>
