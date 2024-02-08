@@ -17,7 +17,7 @@ const googleStrategy = new GoogleStrategy(
         if(!user){
             user = await User.create({
                 googleId: profile.id,
-                firstName: profile.name.givenName,
+                name: profile.name.givenName,
                 surname: profile.name.familyName,
                 email: profile.emails[0].value,
             })
