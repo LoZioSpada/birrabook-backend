@@ -77,7 +77,7 @@ beersRouter
     })
 
     // POST PER AGGIUNGERE UN NUOVO COMMENTO AD UNA BIRRA
-    .post('/:id', async (req, res) => {
+    .post('/:id/comments', async (req, res) => {
         try{
             const beer = await Beer.findById(req.params.id)
             if(!beer){
@@ -96,7 +96,7 @@ beersRouter
     })
 
     // PUT PER MODIFICARE UN COMMENTO
-    .put('/:id/comments/commentId', async (req, res) => {
+    .put('/:id/comments/:commentId', async (req, res) => {
         try{
             const beer = await Beer.findById(req.params.id)
             const updateComment = await Comment.findByIdAndUpdate(
@@ -117,7 +117,7 @@ beersRouter
     })
 
     // DELETE PER CANCELLARE UN COMMENTO
-    .delete('/:id/comments/commentId', async (req, res) => {
+    .delete('/:id/comments/:commentId', async (req, res) => {
         try{
             const beer = await Beer.findById(req.params.id)
             const deleteComment = await Comment.findByIdAndUpdate(
