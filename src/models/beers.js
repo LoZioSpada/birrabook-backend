@@ -21,6 +21,11 @@ const BeerSchema = new Schema({
         required: true,
     },
 
+    alc: {
+        type: String,
+        required: true,
+    },
+
     photo: {
         type: String,
         required: true,
