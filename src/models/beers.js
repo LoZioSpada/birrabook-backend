@@ -22,7 +22,7 @@ const BeerSchema = new Schema({
     },
 
     photo: {
-        type: Buffer,
+        type: String,
         required: true,
     }
 })
