@@ -29,6 +29,11 @@ const BeerSchema = new Schema({
     photo: {
         type: String,
         required: true,
+    },
+
+    user:{
+        type: Schema.Types.ObjectId,
+        ref: 'users'
     }
 })
 
