@@ -1,5 +1,6 @@
 import express from 'express';
 import { Beer } from '../models/beers.js';
+import { Comment } from '../models/comments.js';
 
 const beersRouter = express.Router()
 
