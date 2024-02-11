@@ -81,18 +81,26 @@ beersRouter
     .post('/:id/comments', async (req, res) => {
         try{
             const beer = await Beer.findById(req.params.id)
+            console.log("Beer:", beer)
             if(!beer){
                 return res.status(404).send()
             }
-            const newComment = new Comment(req.body)
+            beer.comments = beer.comments || []
+
+            const newComment = new Comment({
+                rate: req.body.rate,
+                text: req.body.text,
+                author: req.body.author,
+                beer: req.params.id
+            })
+            await newComment.save()
             beer.comments.push(newComment)
             await beer.save()
-            await newComment.save()
-            res.status(201).send(newComment)
+            res.status(201).json(newComment)
 
         } catch(error){
-            console.log(error)
-            res.status(400).send(error)
+            console.log("Errore durante il recupero della birra:", error)
+            res.status(500).send(error)
         }
     })
 
