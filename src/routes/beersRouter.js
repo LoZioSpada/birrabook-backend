@@ -121,7 +121,7 @@ beersRouter
     .delete('/:id/comments/:commentId', async (req, res) => {
         try{
             const beer = await Beer.findById(req.params.id)
-            const deleteComment = await Comment.findByIdAndUpdate(
+            const deleteComment = await Comment.findByIdAndDelete(
                 req.params.commentId
             )
             if(!beer){
