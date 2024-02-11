@@ -85,13 +85,16 @@ beersRouter
             if(!beer){
                 return res.status(404).send()
             }
-            beer.comments = beer.comments || []
+            
+            if(!beer.comments){
+                beer.comments = []
+            }
 
             const newComment = new Comment({
                 rate: req.body.rate,
                 text: req.body.text,
                 author: req.body.author,
-                beer: req.params.id
+                beer: req.params.beer
             })
             await newComment.save()
             beer.comments.push(newComment)

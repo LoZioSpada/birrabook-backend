@@ -14,7 +14,7 @@ const CommentSchema = new Schema({
     author: {
         type: Schema.Types.ObjectId,
         ref: "users",
-        required: true,
+        required: true
     },
 
     beer: {
