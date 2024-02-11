@@ -31,9 +31,14 @@ const BeerSchema = new Schema({
         required: true,
     },
 
-    user:{
+    user: {
         type: Schema.Types.ObjectId,
         ref: 'users'
+    },
+
+    comments: {
+        type: Schema.Types.ObjectId,
+        ref: 'comments'
     }
 })
 

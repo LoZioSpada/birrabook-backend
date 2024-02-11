@@ -101,7 +101,7 @@ beersRouter
         try{
             const beer = await Beer.findById(req.params.id)
             const updateComment = await Comment.findByIdAndUpdate(
-                req.params.id,
+                req.params.commentId,
                 req.body
             )
             if(!beer){

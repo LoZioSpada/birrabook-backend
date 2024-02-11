@@ -2,7 +2,7 @@ import mongoose, { Schema } from "mongoose";
 
 const CommentSchema = new Schema({
     rate: {
-        type: String,
+        type: Number,
         required: true,
     },
 
